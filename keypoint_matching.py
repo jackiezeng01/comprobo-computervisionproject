@@ -8,82 +8,46 @@
 
 import cv2
 import numpy as np
-  
-  
-# The video feed is read in as
-# a VideoCapture object
-cap = cv2.VideoCapture("test_hallway.mp4")
-  
-# ret = a boolean return value from
-# getting the frame, first_frame = the
-# first frame in the entire video sequence
-ret, first_frame = cap.read()
-  
-# Converts frame to grayscale because we
-# only need the luminance channel for
-# detecting edges - less computationally 
-# expensive
-prev_gray = cv2.cvtColor(first_frame, cv2.COLOR_BGR2GRAY)
-  
-# Creates an image filled with zero
-# intensities with the same dimensions 
-# as the frame
-mask = np.zeros_like(first_frame)
-  
-# Sets image saturation to maximum
-mask[..., 1] = 255
-cv2.namedWindow("input", cv2.WINDOW_NORMAL)
-cv2.namedWindow("dense optical flow", cv2.WINDOW_NORMAL)
-  
-while(cap.isOpened()):
-      
-    # ret = a boolean return value from getting
-    # the frame, frame = the current frame being
-    # projected in the video
-    ret, frame = cap.read()
-      
-    # Opens a new window and displays the input
-    # frame
-    cv2.imshow("input", frame)
-      
-    # Converts each frame to grayscale - we previously 
-    # only converted the first frame to grayscale
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-      
-    # Calculates dense optical flow by Farneback method
-    flow = cv2.calcOpticalFlowFarneback(prev_gray, gray, 
-                                       None,
-                                       0.5, 3, 15, 3, 5, 1.2, 0)
+import os
+import matplotlib.pyplot as plt
 
-    # print('flow',flow.shape)
-      
-    # Computes the magnitude and angle of the 2D vectors
-    magnitude, angle = cv2.cartToPolar(flow[..., 0], flow[..., 1])
-      
-    # Sets image hue according to the optical flow 
-    # direction
-    mask[..., 0] = angle * 180 / np.pi / 2
-      
-    # Sets image value according to the optical flow
-    # magnitude (normalized)
-    mask[..., 2] = cv2.normalize(magnitude, None, 0, 255, cv2.NORM_MINMAX)
-      
-    # Converts HSV to RGB (BGR) color representation
-    rgb = cv2.cvtColor(mask, cv2.COLOR_HSV2BGR)
-      
-    # Opens a new window and displays the output frame
-    cv2.imshow("dense optical flow", rgb)
-      
-    # Updates previous frame
-    prev_gray = gray
-      
-    # Frames are read by intervals of 1 millisecond. The
-    # programs breaks out of the while loop when the
-    # user presses the 'q' key
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-  
-# The following frees up resources and
-# closes all windows
-cap.release()
-cv2.destroyAllWindows()
+
+def get_keypoints(img1_path, img2_path):
+    img1 = cv2.imread(img1_path, cv2.COLOR_BGR2GRAY)
+    img2 = cv2.imread(img2_path, cv2.COLOR_BGR2GRAY)
+    # Create sift detector
+    sift = cv2.SIFT_create()
+
+    # find the keypoints and descriptors with SIFT
+    kp1, des1 = sift.detectAndCompute(img1,None)
+    kp2, des2 = sift.detectAndCompute(img2,None)
+
+    # FLANN parameters
+    FLANN_INDEX_KDTREE = 2
+    index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 7)
+    search_params = dict(checks=50)   # or pass empty dictionary
+    flann = cv2.FlannBasedMatcher(index_params,search_params)
+    matches = flann.knnMatch(des1,des2,k=2)
+    # Need to draw only good matches, so create a mask
+    matchesMask = [[0,0] for i in range(len(matches))]
+    # ratio test as per Lowe's paper
+    good_matches = []
+    pts_img1 = []
+    pts_img2 = []
+    for i,(m,n) in enumerate(matches):
+        if m.distance < 0.35 * n.distance:
+            pts_img2.append(kp2[m.trainIdx].pt)
+            pts_img1.append(kp1[m.queryIdx].pt)
+            matchesMask[i]=[1,0]
+    draw_params = dict(matchColor = (0,255,0),
+                    singlePointColor = (255,0,0),
+                    matchesMask = matchesMask,
+                    flags = cv2.DrawMatchesFlags_DEFAULT)
+    img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,matches,None,**draw_params)
+
+    return pts_img1, pts_img2
+    # plt.imshow(img3,),plt.show()
+
+pts_img1, pts_img2 = get_keypoints("image_1.png", "image_2.png")
+print('points image 1', pts_img1)
+print('points image 2', pts_img2)
