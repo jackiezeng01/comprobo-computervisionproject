@@ -6,10 +6,12 @@
 
 # ratio test -  its nice to have a slider and visual by this point
 
+from rospkg import RosPack
 import cv2
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+from triangulation import calc_F
 
 
 def get_keypoints(img1_path, img2_path):
@@ -47,8 +49,42 @@ def get_keypoints(img1_path, img2_path):
 
     return pts_img1, pts_img2
 
-pts_img1, pts_img2 = get_keypoints("image_1.png", "image_2.png")
-F, mask = cv2.findFundamentalMat(pts_img1,pts_img2,cv2.FM_LMEDS)
 
-print('points image 1', pts_img1)
-print('points image 2', pts_img2)
+pts_img1, pts_img2 = get_keypoints("image_1.png", "image_2.png")
+
+# printing out points
+# print('points image 1', pts_img1)
+# print('points image 2', pts_img2)
+
+# F, mask = cv2.findFundamentalMat(pts_img1,pts_img2,cv2.FM_RANSAC)
+
+# finding fundamental matrix
+F = calc_F(pts_img1, pts_img2)
+
+# writing out camera calibration matrix
+K = np.array([[1013.109848, 0.000000, 493.049154],
+              [0.000000, 1013.410857, 390.447766],
+              [0.000000, 0.000000, 1.000000]
+])
+
+# special matrice W used for seperating essential matrix
+W = np.array([[0, -1, 0], [1, 0, 0], [0, 0, 1]])
+# finding essential matrix
+E = np.matmul(np.transpose(K), F, K)
+
+# seperating into rotational and translation matrice options
+U, sigma, V = np.linalg.svd(E)
+
+# options for R and T
+R1 = np.matmul(U, W, np.transpose(V))
+R2 = np.matmul(U, np.transpose(W), np.transpose(V))
+t1 = U[:,[2]]
+t2 = -U[:,[2]]
+
+# four options for camera matrices
+P1_1 = np.hstack([R1, t1])
+P1_2 = np.hstack([R1, -t1])
+P1_3 = np.hstack([R2, t1])
+P1_4 = np.hstack([R2, -t1])
+
+print('P1', P1_1, 'P1', P1_2)
