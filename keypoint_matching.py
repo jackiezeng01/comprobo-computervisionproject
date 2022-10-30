@@ -46,8 +46,9 @@ def get_keypoints(img1_path, img2_path):
     img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,matches,None,**draw_params)
 
     return pts_img1, pts_img2
-    # plt.imshow(img3,),plt.show()
 
 pts_img1, pts_img2 = get_keypoints("image_1.png", "image_2.png")
+F, mask = cv2.findFundamentalMat(pts_img1,pts_img2,cv2.FM_LMEDS)
+
 print('points image 1', pts_img1)
 print('points image 2', pts_img2)
