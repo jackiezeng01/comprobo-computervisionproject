@@ -16,7 +16,7 @@ write-up reqs:
 
 ## Introduction
 
-blah blah
+The goal of this project to identify the speed at which a Neato is moving based on camera input. We did this by extracting geometric structures from images taken through a camera's motion and using this information to estimate the Neato's position at the time each image was taken, relative to where it started. Knowing the time and calculating the Neato's approximate position for each camera input allowed us to determine how fast the Neato was moving as it was taking the images.
 
 * [Implementation](#implementation)
     * [Image Data](#image-data)
@@ -29,30 +29,42 @@ blah blah
 ## Implementation
 ### Image Data
 
-talk about
-* hardware (Neato, raspi cam version 2.?)
+To collect the images used to estimate motion, we used a [Raspberry Pi camera v?](https://www.raspberrypi.com/documentation/accessories/camera.html) connected to the [Neato](https://neatorobotics.com/) robot vacuum.
+
 * camera calibration
-* camera intrinsics
 
 ### Keypoint Matching
 
 [[source]](keypoint_matching.py)
 
-talk about
-* SURF/optical flow (Design decision)
+The first step to estimating motion from image data is matching features between images. Firstly, feature points are identified in each image, with descriptors, then each feature in the feature set of the first image is compared to the feature set of the second image to get the best match.
+
+[insert photo to illustrate this]
+
+[talk about the **design decision** to use SURF/optical flow]
 
 ### Triangulation
 
 [[source]](triangulation.py)
 
+* Calculating the fundamental/essential matrix from two sets of corresponding keypoints
 * Constructing mat A from P1, P2,(camera position) and u1, u2 (3d point projected onto each camera's 2d view)
 * Using eigen-math to solve for A
 
 ## Challenges
 
+* Lack of documentation for TurtleBot2
+* Understanding the geometry math
 
 ## Lessons Learned
 
+* Stepping through the triangulation math with a single point was super useful in wrapping our heads around the math
+* Getting images early
+* I feel like we split up the work pretty well?
 
 ## Next Steps
 
+If we had more time,
+* Use TurtleBot2 because it has better camera input, easy-to-get camera intrinsics
+* Further explore the math behind SURF/optical flow
+* Calculate Neato's speed from camera input in real time
