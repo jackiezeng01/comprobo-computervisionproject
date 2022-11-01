@@ -22,34 +22,36 @@ The goal of this project to identify the speed at which a Neato is moving based 
     * [Image Data](#image-data)
     * [Keypoint Matching](#keypoint-matching)
     * [Triangulation](#triangulation)
+    * [Matrix Calculations](#matrix-calculations)
 * [Challenges](#challenges)
 * [Lessons Learned](#lessons-learned)
 * [Next Steps](#next-steps)
 
 ## Implementation
-### Image Data [simrun]
+### Image Data
+[simrun]
 
 To collect the images used to estimate motion, we used a [Raspberry Pi camera v?](https://www.raspberrypi.com/documentation/accessories/camera.html) connected to the [Neato](https://neatorobotics.com/) robot vacuum.
 
 * camera calibration
 
-### Keypoint Matching [simrun]
-
-[[source]](keypoint_matching.py)
+### Keypoint Matching
+[simrun]
 
 The first step to estimating motion from image data is matching features between images. Firstly, feature points are identified in each image, with descriptors, then each feature in the feature set of the first image is compared to the feature set of the second image to get the best match.
 
 [insert photo to illustrate this]
 
 [talk about the **design decision** to use SURF/optical flow]
-### Matrix calculations [jackie]
 
-
-### Triangulation [melody]
-
-[[source]](triangulation.py)
-
+### Matrix calculations
+[jackie]
 * Calculating the fundamental/essential matrix from two sets of corresponding keypoints
+
+
+### Triangulation
+[melody]
+
 * Constructing mat A from P1, P2,(camera position) and u1, u2 (3d point projected onto each camera's 2d view)
 * Using eigen-math to solve for A
 
