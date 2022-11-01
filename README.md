@@ -47,13 +47,15 @@ The first step to estimating motion from image data is matching features between
 ### Matrix calculations
 [jackie]
 * Calculating the fundamental/essential matrix from two sets of corresponding keypoints
-
+* Calculating P2 from F
 
 ### Triangulation
 [melody]
 
+From the matrix calculations in the step above, we now have all the information we need to reconstruct the scene and verify the accuracy of our math. We can use the canonical first camera (P1) and the second camera (P2), which we calculated from the fundamental matrix, to triangulate our two sets of 2D keypoints into one set of 3D points that should reflect the environment in which the Neato was recording images. 
 * Constructing mat A from P1, P2,(camera position) and u1, u2 (3d point projected onto each camera's 2d view)
 * Using eigen-math to solve for A
+* Results in 4 possible P2s, check which one is correct by using each one to triangulate our points -> which one results in the most accurate 3D reconstruction.
 
 ## Challenges
 [Jackie]
