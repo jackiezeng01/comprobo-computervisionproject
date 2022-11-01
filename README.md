@@ -27,13 +27,13 @@ The goal of this project to identify the speed at which a Neato is moving based 
 * [Next Steps](#next-steps)
 
 ## Implementation
-### Image Data
+### Image Data [simrun]
 
 To collect the images used to estimate motion, we used a [Raspberry Pi camera v?](https://www.raspberrypi.com/documentation/accessories/camera.html) connected to the [Neato](https://neatorobotics.com/) robot vacuum.
 
 * camera calibration
 
-### Keypoint Matching
+### Keypoint Matching [simrun]
 
 [[source]](keypoint_matching.py)
 
@@ -42,8 +42,10 @@ The first step to estimating motion from image data is matching features between
 [insert photo to illustrate this]
 
 [talk about the **design decision** to use SURF/optical flow]
+### Matrix calculations [jackie]
 
-### Triangulation
+
+### Triangulation [melody]
 
 [[source]](triangulation.py)
 
@@ -52,17 +54,20 @@ The first step to estimating motion from image data is matching features between
 * Using eigen-math to solve for A
 
 ## Challenges
+[Jackie]
 
 * Lack of documentation for TurtleBot2
 * Understanding the geometry math
 
 ## Lessons Learned
+[Melody]
 
 * Stepping through the triangulation math with a single point was super useful in wrapping our heads around the math
 * Getting images early
 * I feel like we split up the work pretty well?
 
 ## Next Steps
+[Simrun]
 
 If we had more time,
 * Use TurtleBot2 because it has better camera input, easy-to-get camera intrinsics
