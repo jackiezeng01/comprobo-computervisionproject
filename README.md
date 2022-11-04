@@ -8,13 +8,13 @@
 
 ## Introduction
 
-The goal of this project to identify the speed at which a Neato is moving based on camera input. We did this by extracting geometric structures from images taken through a camera's motion and using this information to estimate the Neato's position at the time each image was taken, relative to where it started. Knowing the time and calculating the Neato's approximate position for each camera input allowed us to determine how fast the Neato was moving as it was taking the images.
+The goal of this project to identify the speed at which a robot is moving based on camera input. We did this by extracting geometric structures from images taken through a camera's motion and using this information to estimate the robot's position at the time each image was taken, relative to where it started. Knowing the time and calculating the robot's approximate position for each camera input allowed us to determine how fast the robot was moving as it was taking the images.
 
 * [Implementation](#implementation)
     * [Image Data](#image-data)
     * [Keypoint Matching](#keypoint-matching)
-    * [Triangulation](#triangulation)
     * [Matrix Calculations](#matrix-calculations)
+    * [Triangulation](#triangulation)
 * [Challenges](#challenges)
 * [Lessons Learned](#lessons-learned)
 * [Next Steps](#next-steps)
@@ -32,7 +32,7 @@ In order to get camera intrinsic information from the camera, we had to manualll
 The first step to estimating motion from image data is matching features between images. In order to do this, we used SIFT to find keypoints in the images. A good keypoint is any region that will change rapidly if it is moved, for example a corner. Descriptors are extracted from each keypoint which characterize the local appearance around a keypoint. We then used a FLANN based matcher to match the keypoints from the two images. Several of the matches were fairly innacurate at first because the carpeted surface in the picture had a repetitive pattern which led to false matches. To get a good set of keypoints, we implemented a ratio test which checks to see if the second best match is a lot lower than the best match. Here is the final set of keypoints matches:
 
 <p align="center">
-<img src="keypoints.png" width="400"/>
+<img src="keypoints.png" width="700"/>
 </p>
 <center> Set of matching keypoints </center>
 
@@ -75,9 +75,7 @@ $x = PX$ and $x' = P'X$ where X is the corresponding real world 3D point.
 
 By rewriting these equations, we can formulate a system of linear equations that can be solved for the value of X. Specifically, from two views, we get a total of four linear equations in the form of $AX = 0$, and to find the nonzero solution for $X$, we identify the unit eigenvector corresponding to the smallest eigenvalue of the matrix $A^TA$. This gives us an approximation for the 3D points arising from the two 2D points.
 
-Recall from our matrix calculations above, we have four possible matrices for our second camera. We can use the results of triangulating our points to identify which P2 matrix is the correct one.
-
-* check which P2 is correct by using each one to triangulate our points -> which one results in the most accurate 3D reconstruction.
+Recall from our matrix calculations above, we have four possible matrices for our second camera. We can use the results of triangulating our points to identify which P2 matrix is the correct one. We use each possible matrix to triangulate our points and the one that has the highest number of valid reconstructed 3D points is taken to be the correct P2 matrix. A 3D point is considered invalid if it's positioned behind any of the two cameras (i.e. has a negative z value).
 
 ## Challenges
 
@@ -86,7 +84,7 @@ Recall from our matrix calculations above, we have four possible matrices for ou
 
 ## Lessons Learned
 
-Since this project is very math-heavy, we found it helpful to step through the entire process with a single point and visualize the matrices involved in each section, from calculating the fundamental matrix to solving for the eigenvectors/eigenvalues in triangulation. This helped us solidify our understanding each part of the math and
+Since this project is very math-heavy, we found it helpful to step through the entire process with a single point and visualize the matrices involved in each section, from calculating the fundamental matrix to solving for the eigenvectors/eigenvalues in triangulation. This helped us solidify our understanding of what each variable and matrix represented, especially since we heavily referenced academic papers.
 
 When working on this project, we split up the math into different sections for each member to take lead on which is good practice for teams working on longer term robotics projects. By breaking down a large process into smaller math problems, we were able to make sure we were making steady progress towards our goal. With this kind of workflow, we each took deep dives into specific parts of the process and regularly came together as a team to share our learnings, which allowed us tackle a complex problem and learn a lot from the project.
 
