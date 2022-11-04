@@ -113,7 +113,7 @@ def get_keypoints(img1_path, img2_path):
     pts_img1 = []
     pts_img2 = []
     for i,(m,n) in enumerate(matches):
-        if m.distance < 0.8 * n.distance:
+        if m.distance < 0.38 * n.distance:
             pts_img2.append(kp2[m.trainIdx].pt)
             pts_img1.append(kp1[m.queryIdx].pt)
             matchesMask[i]=[1,0]

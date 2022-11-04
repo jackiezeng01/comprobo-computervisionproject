@@ -161,7 +161,7 @@ print(P2_2)
 print(P2_3)
 print(P2_4)
 
-'''
+
 # TEST 3D pt -> 2D projections -> recovered 3D pt
 recovered_pts = []
 for i in range(len(pts_3d)):
@@ -173,9 +173,9 @@ x = 2
 y = 3
 z = 9
 pt3d = np.array([[x],[y],[z], [1]])
-u1 = np.matmul(P1,pt3d)
+u1 = np.matmul(K @ P1,pt3d)
 print(u1)
-u2 = np.matmul(P2,pt3d)
+u2 = np.matmul(K @ P2,pt3d)
+# divide by u2[2]
 recovered = triangulation(P1, P2, u1, u2)
 print(recovered)
-'''
