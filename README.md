@@ -51,16 +51,16 @@ The fundamental matrix allows us to relate the the two cameras in pixel coordina
 
 The fundamental matrix is a 3x3 matrix, and we need at least 8 pairs of keypoints to determine it since it has a max 8 degrees of freedom. To calculate this, we tried bopth creating our own function implementing 8 point algorithm and using the OpenCV findFundamentalMatrix function using RANSAC. We ended up going with the built in OpenCV function for our algorithms since it was more accurate. 
 
-The essential matrix contains the same information of the fundamental matrix and incorporates calibration.  It also gives us rotation and translation information. 
+The essential matrix contains the same information of the fundamental matrix and undistorts the images by adding in the camera calibration information. We derive it using the equation described in H&Z's Multiple View Geometry: 
+
+$E = K.T*F*K$
+
+Then, we take the Single Value Decomposition of the essenial matrix to decompose it into a rotational element and a translational element. We get two variations of rotational and translation matrices. For ease of calculation, we set the location of the first camera to be at the origin (0,0,0) and have the derived matrices determine the location of the second camera. Refer to the image below for the 4 ways the rotational and translational matrices can be paired. 
 
 <p align="center">
 <img src="possibleP2s.png" width="400"/>
 </p>
 <center> Image description </center>
-
-* Talk about how we get four possible P2s (Melody will talk about how we figure out which one is the correct on)
-
-Once we have the fundamental matrix, we needed to understand
 
 ### Triangulation
 
