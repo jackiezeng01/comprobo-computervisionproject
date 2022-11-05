@@ -40,21 +40,18 @@ We were debating whether to use optical flow or SURF initally. Based on online r
 
 ### Matrix calculations
 
-Once we have two sets of keypoints, we then need to further determine 
+Once we have two sets of keypoints determined from SIFT, we can then determine the fundamental and the essentail matrix, which describes the geometric relationship between the two images. 
 
-* Calculating the fundamental matrix
-    - It allows us to relate the 2 cameras in pixel coordinates
-    - Essentially, it maps apin in one image to a line in the other image. 
-    - Sincefrom two sets of corresponding keypoints the matrix is 3x3, we needed at last 8 points to determine it because it has at max 8 degrees of freedom.
-    - To calculate it, we both tried creating out own function implementing the 8 point algorithm. However, this did not work as well as we had hoped... TODO: Jackie try to fix the find fundamanetal matrix function that we have. 
-    - If there are more points, RANSAC is used.
-* Calculating the essential matrix 
-    - The essential matrix takes the fundamental matrix and incorporates 
-    - Places the first camera at the origin hypothetically
-    - Th
-    - Using the 8 point algorithm vs RANSAC to calculate the matches
-    - 
-* Calculating P2 from F
+The fundamental matrix allows us to relate the the two cameras in pixel coordinates. It maps one point in one image to an epiline in the other image. The image below shows a setup with 2 cameras taking images of the same scene. We'll walk through the scenario with **X**, a 3D point in space. On the left camera, **X** projects to the point **x** on the 2D image. We do not have information on the distance/depth of **X** in 3D space. As long as **X** is on the projection line, regardless of its distance from the camera, it will always image to the same 2D coordinates on the left image. All of the possible locations of **X** can be found on the purple. epiline **l'** on the right image. 
+
+<p align="center">
+<img src="point_correspondence_geometry.png" width="700"/>
+</p>
+<center> Point correspondence geometry </center>
+
+The fundamental matrix is a 3x3 matrix, and we need at least 8 pairs of keypoints to determine it since it has a max 8 degrees of freedom. To calculate this, we tried bopth creating our own function implementing 8 point algorithm and using the OpenCV findFundamentalMatrix function using RANSAC. We ended up going with the built in OpenCV function for our algorithms since it was more accurate. 
+
+The essential matrix contains the same information of the fundamental matrix and incorporates calibration.  It also gives us rotation and translation information. 
 
 <p align="center">
 <img src="possibleP2s.png" width="400"/>
