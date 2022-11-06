@@ -76,8 +76,8 @@ Recall from our matrix calculations above, we have four possible matrices for ou
 
 ## Challenges
 
-* Lack of documentation for TurtleBot2
-* Understanding the geometry math
+* Lack of documentation for TurtleBot4. We orginally wanted to work with the TurtleBot4, however, we experienced a bunch of issues with connecting to it. We spent around a week trying to figure this out and it would have been more efficient to pivot to the Neato earlier. 
+* Another challenge was trying to both understand and visualize the geometry math. We spent a lot of time reading articles multiple times and discussing the math with each other. 
 
 ## Lessons Learned
 
