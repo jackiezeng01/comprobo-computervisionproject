@@ -31,28 +31,6 @@ def triangulation (P1, P2, u1, u2):
     x = e_vecs[:,idx]/e_vecs[3,idx]
     return x
 
-# example
-# P1 = np.array([[1.0, 0.0, 0.0, 0.0],
-#             [0.0, 1.0, 0.0, 0.0],
-#             [0.0, 0.0, 1.0, 0.0]]);
-
-# P2 = np.array([[1.0, 0.0, 0.0, 3],
-#             [0.0, 1.0, 0.0, 0.0],
-#             [0.0, 0.0, 1.0, 0.0]]); # camera matrix change this
-
-# x = 3
-# y = 5
-# z = 2
-# pt3d = np.array([[x],[y],[z], [1]])
-# pt3d in 2d:
-    # u1 = np.matmul(P1,pt3d)
-    # u2 = np.matmul(P2,pt3d)
-# recovered = triangulation(P1, P2, u1, u2)
-# print(recovered)
-
-# epipolar_threshold = 0.006737946999085467
-# E, mask = cv2.findFundamentalMat(u1,u2,cv2.FM_RANSAC,epipolar_threshold)
-
 
 '''
 math for finding fundamental matrix
