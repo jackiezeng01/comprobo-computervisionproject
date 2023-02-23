@@ -60,7 +60,6 @@ Then, we take the Single Value Decomposition of the essenial matrix to decompose
 <p align="center">
 <img src="possibleP2s.png" width="400"/>
 </p>
-<center> Image description </center>
 
 ### Triangulation
 
