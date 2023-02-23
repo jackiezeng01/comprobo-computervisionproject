@@ -53,7 +53,7 @@ The fundamental matrix is a 3x3 matrix, and we need at least 8 pairs of keypoint
 
 The essential matrix contains the same information of the fundamental matrix and undistorts the images by adding in the camera calibration information. We derive it using the equation described in H&Z's Multiple View Geometry: 
 
-$E = K.T*F*K$
+$E = K.T * F * K$
 
 Then, we take the Single Value Decomposition of the essenial matrix to decompose it into a rotational element and a translational element. We get two variations of rotational and translation matrices. For ease of calculation, we set the location of the first camera to be at the origin (0,0,0) and have the derived matrices determine the location of the second camera. Refer to the image below for the 4 ways the rotational and translational matrices can be paired. 
 
